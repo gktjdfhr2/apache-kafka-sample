@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +33,21 @@ public class SimpleConsumer {
         // 컨슈머 그룹을 통해 목적에 맞게 동일한 역할을 하는 컨슈머를 묶어 관리한다.
         kafkaConsumer.subscribe(Arrays.asList(TOPIC_NAME));
 
-        while (true) {
-            ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
-            for (ConsumerRecord<String, String> record : records) {
-                logger.info("{}", record);
+        try{
+            while (true) {
+                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
+                for (ConsumerRecord<String, String> record : records) {
+                    logger.info("{}", record);
+                }
+                // 컨수머 동기 커밋
+                kafkaConsumer.commitSync();
             }
+        } catch (WakeupException e) {
+            logger.warn("WakeupException: {}", e.getMessage());
+        } finally {
+            kafkaConsumer.close();
+            logger.info("Consumer closed");
         }
+
     }
 }
