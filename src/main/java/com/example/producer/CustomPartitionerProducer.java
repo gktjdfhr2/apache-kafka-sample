@@ -1,4 +1,4 @@
-package com.example;
+package com.example.producer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Partitioner;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class CustomPartitioner implements Partitioner {
+public class CustomPartitionerProducer implements Partitioner {
 
     private final static Logger logger = LoggerFactory.getLogger(SimpleProducer.class);
     private final static String TOPIC_NAME = "test";
@@ -28,7 +28,7 @@ public class CustomPartitioner implements Partitioner {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        configs.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class);
+        configs.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitionerProducer.class);
 
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(configs);
 
