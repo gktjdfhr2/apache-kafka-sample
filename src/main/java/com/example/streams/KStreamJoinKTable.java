@@ -27,7 +27,6 @@ public class KStreamJoinKTable {
         properties.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         StreamsBuilder builder = new StreamsBuilder();
-
         KTable<String, String> addressTable = builder.table(ADDRESS_TABLE);
         KStream<String, String> orderStream = builder.stream(ORDER_TABLE);
 
